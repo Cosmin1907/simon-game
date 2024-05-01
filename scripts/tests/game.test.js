@@ -1,5 +1,11 @@
+/**
+ * @jest-environment jsdom
+ */
+
 const { test, expect } = require("@jest/globals");
-const { game, newGame, showScore, addTurn, lightsOn, showTurns } = require("../game");
+const { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn } = require("../game");
+
+jest.spyOn(window, "alert").mockImplementation(() => {});
 
 beforeAll (() => {
     let fs = require("fs");
@@ -54,6 +60,12 @@ describe("newGame works correctly", () => {
     test("should display 0 for the element with the id pf score", () => {
         expect(document.getElementById("score").innerText).toEqual(0);
     });
+    test("expect data-listner to be true", () => {
+        const elements = document.getElementsByClassName("circle");
+        for (let element of elements) {
+            expect(element.getAttribute("data-listner")).toEqual("true");
+        }
+    });
 });
 
 describe("gameplay works correctly", () => {
@@ -81,5 +93,15 @@ describe("gameplay works correctly", () => {
         game.turnNumber = 42;
         showTurns();
         expect(game.turnNumber).toBe(0);
+    });
+    test("should increment the score if the turn is correct", () => {
+        game.playerMoves.push(game.currentGame[0]);
+        playerTurn();
+        expect(game.score).toBe(1);
+    });
+    test("should call an alert if the move is wrong", () => {
+        game.playerMoves.push("wrong");
+        playerTurn();
+        expect(window.alert).toBeCalledWith("Wrong move!");
     });
 });
