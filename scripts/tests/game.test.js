@@ -25,6 +25,9 @@ describe("game object contains correct keys", () => {
     test("choices contain the correct id", () => {
         expect(game.choices).toEqual(["button1", "button2", "button3", "button4"])
     });
+    test("turnNumber key exists", () => {
+        expect("turnNumber" in game).toBe(true);
+    });
 });
 
 describe("newGame works correctly", () => {
@@ -32,6 +35,7 @@ describe("newGame works correctly", () => {
         game.score = 42;
         game.currentGame = ["button"];
         game.playerMoves = ["button"];
+        game.turnNumber = 42;
         document.getElementById("score").innerText = "42";
         newGame();
     });
@@ -43,6 +47,9 @@ describe("newGame works correctly", () => {
     });
     test("should clear playerMoves", () => {
         expect(game.playerMoves.length).toBe(0);
+    });
+    test("should reset turnNumber", () => {
+        expect(game.turnNumber).toEqual(0);
     });
     test("should display 0 for the element with the id pf score", () => {
         expect(document.getElementById("score").innerText).toEqual(0);
